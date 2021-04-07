@@ -32,6 +32,7 @@ end
 
 def xcodebuild(sandbox, build_dir, target, sdk='macosx', deployment_target=nil, configuration)
   args = %W(-derivedDataPath #{build_dir} -project #{sandbox.project_path.realdirpath} -scheme #{target} -configuration #{configuration} -sdk #{sdk})
+  args.append 'ARCHS=x86_64' if sdk == 'iphonesimulator'
   platform = PLATFORMS[sdk]
   args += Fourflusher::SimControl.new.destination(:oldest, platform, deployment_target) unless platform.nil?
   Pod::Executable.execute_command 'xcodebuild', args, true
